@@ -17,6 +17,7 @@ import com.xm.view.stock.bean.FocusInfo;
 
 import org.json.JSONObject;
 
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -160,12 +161,20 @@ public class MainActivity extends AppCompatActivity {
                 trendLableChartMonth.setData(newTrendLablesMonth, "03-13 15：00");
             }
         });
-        //重组X轴刻度
+        //重组X轴刻度, 取其中5个日期
         List<List<String>> monthData = data.getTrend().getMonth();
-        String[] xStrArr = new String[monthData.size()];
-        for(int i = 0; i<monthData.size(); i++){
-            xStrArr[i] = monthData.get(i).get(0);
+        Collections.reverse(monthData);   //倒序
+        String[] xStrArr = new String[5];
+        xStrArr[0] = monthData.get(0).get(0);    //第一天
+        xStrArr[1] = monthData.get(monthData.size()/3).get(0);    //
+        xStrArr[2] = monthData.get(monthData.size()/2).get(0);   //中间一天
+        xStrArr[3] = monthData.get(monthData.size()/2-1+(monthData.size()-(monthData.size()/2-1))/2).get(0);   //
+        xStrArr[4] = monthData.get(monthData.size()-1).get(0);   //最后一天
+        for(int i = 0; i<xStrArr.length; i++){
+            String monthDay = xStrArr[i];
+            xStrArr[i] = monthDay.substring(monthDay.indexOf("-")+1,monthDay.length());
         }
+        trendLinesChartMonth.setDataNumCount(monthData.size());   //设置数据的数量，默认是60*4，此处显示月的，所以是30
         trendLinesChartMonth.setData(data.getTrend().getMonth(), xStrArr);               //折线图设置数据
 
         //涨跌对比

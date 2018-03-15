@@ -107,7 +107,7 @@ public class LinesChart extends BaseChart{
     }
 
     /***********************************设置属性set方法**********************************/
-
+    /**设置数据的数量，默认是60*4*/
     public void setDataNumCount(int dataNumCount) {
         this.dataNumCount = dataNumCount;
     }
@@ -187,6 +187,13 @@ public class LinesChart extends BaseChart{
             }
         }else{
             //如果X轴标签字体过长的情况需要特殊处理
+            float oneWidth = (rectChart.right - rectChart.left)/lableXList.length;
+            for(int i = 0; i<lableXList.length; i++){
+                String lableX = lableXList[i];
+                float xLen = FontUtil.getFontlength(paintLabel, lableX);
+                lableXPointList.add(new DataPoint(lableX, 0, new PointF(
+                        rectChart.left+i*oneWidth+(oneWidth-xLen)/2,rectChart.bottom + textSpaceX + lableLead)));
+            }
         }
 
         /**③、计算Y刻度最大值和最小值以及幅度*/
