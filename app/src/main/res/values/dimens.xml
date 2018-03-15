@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+
+    <!--柱状图-->
+    <dimen name="ts_barchart_x">10sp</dimen>   <!--x轴文字大小-->
+    <dimen name="ts_barchart_y">12sp</dimen>   <!--y轴文字大小-->
+    <dimen name="ts_barchart_lable">14sp</dimen><!--下面文字大小-->
+    <!--折线图-->
+    <dimen name="ts_chart_xy">10sp</dimen>       <!--xy轴文字大小-->
+    <dimen name="ts_chart_lable">12sp</dimen>    <!--上面指标文字大小-->
+    <dimen name="ts_chart_time">14sp</dimen>     <!--时间文字大小-->
+
+</resources>
