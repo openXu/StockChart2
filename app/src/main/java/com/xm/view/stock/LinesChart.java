@@ -197,6 +197,8 @@ public class LinesChart extends BaseChart{
         }
 
         /**③、计算Y刻度最大值和最小值以及幅度*/
+        YMARK_MAX =  Float.MIN_VALUE;    //Y轴刻度最大值
+        YMARK_MIN =  Float.MAX_VALUE;    //Y轴刻度最小值
         for(List<String> list : dataList){
             for(String str : list){
                 try {
