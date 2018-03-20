@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         int[] zhabanLineColor = new int[]{Color.parseColor("#647bc1")};
         zhabanLableChart.setLineColor(zhabanLineColor);
         zhabanLinesChart.setLineColor(zhabanLineColor);
+        zhabanLinesChart.setLINE_NUM(zhabanLineColor.length);
         //涨幅
         int[] zhangfuLineColor = new int[]{Color.parseColor("#e21b20"),
                 Color.parseColor("#2c5aa7")};
@@ -208,9 +209,8 @@ public class MainActivity extends AppCompatActivity {
             public void onfocus(FocusInfo focusInfo) {
                 String[] newZhabanLables = new String[1];
                 List<DataPoint> datas = focusInfo.getFocusData();
-                for(int i = 0; i<datas.size() ; i++){
-                    newZhabanLables[i] = zhabanLables[i] + (" "+(int)datas.get(i).getValueY()+"家"+"   炸板数");
-                }
+                newZhabanLables[0] = zhabanLables[0] + (" "+(int)datas.get(0).getValueY()+"家"+
+                        "   炸板数"+NumberFormatUtil.formattedDecimalToPercentage(datas.get(1).getValueY()));
                 zhabanLableChart.setData(newZhabanLables, "03-13 15：00");
             }
         });

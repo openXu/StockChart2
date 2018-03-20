@@ -51,6 +51,8 @@ public class LinesChart extends BaseChart{
     private int[] lineColor = new int[]{Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW};
     //设置曲线粗细
     private int lineSize = DensityUtil.dip2px(getContext(), 1.5f);
+    //曲线数量
+    private int LINE_NUM = 0;
     //设置坐标文字大小
     private int textSize = (int)getResources().getDimension(R.dimen.ts_chart_xy);
     //设置坐标文字颜色
@@ -117,6 +119,11 @@ public class LinesChart extends BaseChart{
     public void setAnimType(AnimType animType) {
         this.animType = animType;
     }
+
+    public void setLINE_NUM(int LINE_NUM) {
+        this.LINE_NUM = LINE_NUM;
+    }
+
     /***********************************设置属性set方法over**********************************/
 
     @Override
@@ -197,12 +204,14 @@ public class LinesChart extends BaseChart{
         }
 
         /**③、计算Y刻度最大值和最小值以及幅度*/
+        int lineNum = LINE_NUM==0?(dataList.get(0).size()-1):LINE_NUM;
         YMARK_MAX =  Float.MIN_VALUE;    //Y轴刻度最大值
         YMARK_MIN =  Float.MAX_VALUE;    //Y轴刻度最小值
         for(List<String> list : dataList){
-            for(String str : list){
+            for(int i = 1; i< lineNum+1 ; i++){
+                String str = list.get(i);
                 try {
-                    if(yMarkType == YMARK_TYPE.PERCENTAGE){
+                    if(str.contains("%")){
                         str = str.substring(0,str.indexOf("%"));//百分数不能直接强转
                         YMARK = Float.parseFloat(str) /100.0f;
                     }else{
@@ -216,6 +225,7 @@ public class LinesChart extends BaseChart{
                 }catch (Exception e){
                 }
             }
+
         }
         LogUtil.w(TAG, "Y轴真实YMARK_MIN="+YMARK_MIN+"   YMARK_MAX="+YMARK_MAX);
         if(YMARK_MAX>0)
@@ -241,11 +251,10 @@ public class LinesChart extends BaseChart{
 
         /**④、计算点的坐标，如果有动画的情况下，边绘制边计算会耗费性能，所以先计算*/
         //创建集合，用于存放每条线上每个点的坐标数据
-        linePointList = new ArrayList<>();
         List<String> group = dataList.get(0);
-        for(int i = 0; i<group.size()-1; i++){
+        linePointList = new ArrayList<>();
+        for(int i = 0; i<group.size()-1; i++)
             linePointList.add(new ArrayList<DataPoint>());
-        }
         float oneSpace = (rectChart.right - rectChart.left) / (dataNumCount-1);
         List<DataPoint> lastDataGroup = null;   //最后一组数据
         for(int i = 0; i < dataList.size(); i++){
@@ -254,16 +263,19 @@ public class LinesChart extends BaseChart{
             for(int j = 1; j < group.size(); j++){
                 try {
                     float valueY;
-                    if(yMarkType == YMARK_TYPE.PERCENTAGE){
+                    if(group.get(j).contains("%"))
                         valueY = Float.parseFloat(group.get(j).substring(0,group.get(j).indexOf("%"))) /100.0f;
-                    }else{
+                    else
                         valueY = Float.parseFloat(group.get(j));
-                    }
+
                     PointF point = new PointF();
-                    point.x = rectChart.left + i * oneSpace;
-                    //根据最高价和最低价，计算当前数据在图表上Y轴的坐标
-                    point.y = rectChart.bottom -
-                            (rectChart.bottom-rectChart.top)/(YMARK_MAX - YMARK_MIN) * (valueY-YMARK_MIN);
+                    //只有需要绘制的线才计算坐标
+                    if(j<lineNum+1){
+                        point.x = rectChart.left + i * oneSpace;
+                        //根据最高价和最低价，计算当前数据在图表上Y轴的坐标
+                        point.y = rectChart.bottom -
+                                (rectChart.bottom-rectChart.top)/(YMARK_MAX - YMARK_MIN) * (valueY-YMARK_MIN);
+                    }
                     linePointList.get(j-1).add(new DataPoint(group.get(0), valueY, point));
 //                    LogUtil.w(TAG, "绘制"+j+"曲线"+(int)point.x+", "+(int)point.y);
 
@@ -296,11 +308,13 @@ public class LinesChart extends BaseChart{
         if(null != point && null!=dataList && dataList.size()>0) {
             //获取焦点对应的数据的索引
             int index = (int) ((point.x - rectChart.left) * dataNumCount / (rectChart.right - rectChart.left));
-            index = Math.max(0, Math.min(index, dataList.size() - 1));
+
             //避免滑出
             List<DataPoint> dataPoints = linePointList.get(0);
             if(point.x > dataPoints.get(dataPoints.size()-1).getPoint().x)
                 point.x = dataPoints.get(dataPoints.size()-1).getPoint().x;
+
+            index = Math.max(0, Math.min(index, dataPoints.size() - 1));
 
             focusInfo = new FocusInfo();
             focusInfo.setPoint(point);
@@ -408,7 +422,11 @@ public class LinesChart extends BaseChart{
         paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeWidth(lineSize);
-        for(int j = 0; j < linePointList.size(); j++){
+
+        int lineNum = LINE_NUM==0?(dataList.get(0).size()-1):LINE_NUM;
+
+        for(int j = 0; j < lineNum; j++){
+//        for(int j = 0; j < linePointList.size(); j++){
             List<DataPoint> lineList = linePointList.get(j);
             paint.setColor(lineColor[j]);
             //一条一条的绘制
