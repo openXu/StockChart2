@@ -154,6 +154,7 @@ public abstract class BaseChart extends View {
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
+                handler.removeMessages(100);
                 onFocus = false;
                 LogUtil.e(TAG, "事件结束");
                 break;
