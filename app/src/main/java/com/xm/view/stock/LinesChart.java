@@ -167,7 +167,8 @@ public class LinesChart extends BaseChart{
     private void evaluatorByData(){
         if(dataList.size()<=0)
             return;
-
+        dataNumCount = dataList.size();
+        LogUtil.w(TAG, "总共"+dataNumCount+"条数据");
         /**①、计算字体相关以及图表原点坐标*/
         paintLabel.setTextSize(textSize);
         lableHeight = FontUtil.getFontHeight(paintLabel);
@@ -313,7 +314,8 @@ public class LinesChart extends BaseChart{
             List<DataPoint> dataPoints = linePointList.get(0);
             if(point.x > dataPoints.get(dataPoints.size()-1).getPoint().x)
                 point.x = dataPoints.get(dataPoints.size()-1).getPoint().x;
-
+            if(point.x < dataPoints.get(0).getPoint().x)
+                point.x = dataPoints.get(0).getPoint().x;
             index = Math.max(0, Math.min(index, dataPoints.size() - 1));
 
             focusInfo = new FocusInfo();
