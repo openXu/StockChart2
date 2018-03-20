@@ -175,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
             String monthDay = xStrArr[i];
             xStrArr[i] = monthDay.substring(monthDay.indexOf("-")+1,monthDay.length());
         }
-        trendLinesChartMonth.setDataNumCount(monthData.size());   //设置数据的数量，默认是60*4，此处显示月的，所以是30
         trendLinesChartMonth.setData(data.getTrend().getMonth(), xStrArr);               //折线图设置数据
 
         //涨跌对比
