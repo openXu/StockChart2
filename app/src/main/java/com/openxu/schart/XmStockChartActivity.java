@@ -20,7 +20,7 @@ import org.json.JSONObject;
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class XmStockChartActivity extends AppCompatActivity {
     ChartData data;
     BarChart bartChart;
     LinesLableChart trendLableChart, trendLableChartMonth, compareLableChart, zhabanLableChart, zhangfuLableChart, weightLableChart;
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_wcxstock_chart);
 
         bartChart = (BarChart)findViewById(R.id.bartChart);
         trendLableChart = (LinesLableChart)findViewById(R.id.trendLableChart);
